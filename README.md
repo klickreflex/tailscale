@@ -1,4 +1,9 @@
-# tailscale
+# TailScale
+
+Enter your main color, get a 9-step scale from 100-900 you can paste right into your TailwindCSS configuration. 
+
+![tailscale screenshot](screenshot.png)
+
 
 ## Project setup
 ```
