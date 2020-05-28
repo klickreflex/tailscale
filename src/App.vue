@@ -139,7 +139,7 @@
                 <button
                     class="mt-4 inline-flex items-center duration-200 ease-in transition rounded-sm px-4 py-2 hover:text-yellow-100 bg-yellow-300 text-xs uppercase tracking-wide hover:bg-blue-800 focus:shadow-outline focus:outline-none"
                 >
-                    <svg class="fill-current w-4 h-4 mr-2" viewBox="0 0 16 16"><title>note-code</title><g><path d="M10.4,15.8l-3.6-2.7l-5.5,1.8C1,15.1,0,15.1,0,14V2c0-0.6,0.4-1,1-1h2v2H2v9.6l4.7-1.6 c0.3-0.1,0.7,0,0.9,0.1l3.5,2.6l2.9-1.4V3h-1V1h2c0.6,0,1,0.4,1,1v11c0,0.4-0.2,0.7-0.6,0.9l-4,2C11.1,16,10.7,16,10.4,15.8z"></path> <rect x="5" width="6" height="4"></rect></g></svg>
+                    <svg class="fill-current w-4 h-4 mr-2" viewBox="0 0 16 16"><title>note-code</title><g><path d="M10.4,15.8l-3.6-2.7l-5.5,1.8C1,15.1,0,15.1,0,14V2c0-0.6,0.4-1,1-1h2v2H2v9.6l4.7-1.6 c0.3-0.1,0.7,0,0.9,0.1l3.5,2.6l2.9-1.4V3h-1V1h2c0.6,0,1,0.4,1,1v11c0,0.4-0.2,0.7-0.6,0.9l-4,2C11.1,16,10.7,16,10.4,15.8z" /> <rect x="5" width="6" height="4" /></g></svg>
                     <span>Copy to clipboard</span>
                 </button>
             </div>
