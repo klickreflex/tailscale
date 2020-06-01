@@ -14,12 +14,21 @@
                 <div class="grid grid-cols-2 gap-4">
                     <label class="block">
                         <span class="text-sm uppercase">Color Name</span>
-                        <input class="block w-full mt-1 form-input" placeholder="green">
+                        <input
+                            class="block w-full mt-1 form-input"
+                            placeholder="green"
+                            v-model="colors[4].name"
+                        >
                     </label>
 
                     <label class="block">
                         <span class="text-sm uppercase">Color Value</span>
-                        <input class="block w-full mt-1 form-input" type="text" placeholder="#48bb78">
+                        <input
+                            class="block w-full mt-1 form-input"
+                            type="text"
+                            placeholder="#48bb78"
+                            v-model="colors[4].value"
+                        >
                     </label>
                 </div>
             </div>
@@ -34,51 +43,15 @@
             </p>
             <div class="max-w-3xl mx-auto mt-6">
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <color-card
-                        color-name="green"
-                        :color-shade="100"
-                        color-value="#f0fff4"
-                    />
-                    <color-card
-                        color-name="green"
-                        :color-shade="200"
-                        color-value="#c6f6d5"
-                    />
-                    <color-card
-                        color-name="green"
-                        :color-shade="300"
-                        color-value="#9ae6b4"
-                    />
-                    <color-card
-                        color-name="green"
-                        :color-shade="400"
-                        color-value="#68d391"
-                    />
-                    <color-card
-                        color-name="green"
-                        :color-shade="500"
-                        color-value="#48bb78"
-                    />
-                    <color-card
-                        color-name="green"
-                        :color-shade="600"
-                        color-value="#38a169"
-                    />
-                    <color-card
-                        color-name="green"
-                        :color-shade="700"
-                        color-value="#2f855a"
-                    />
-                    <color-card
-                        color-name="green"
-                        :color-shade="800"
-                        color-value="#276749"
-                    />
-                    <color-card
-                        color-name="green"
-                        :color-shade="900"
-                        color-value="#22543d"
-                    />
+                    <color-card v-model="colors[0]" />
+                    <color-card v-model="colors[1]" />
+                    <color-card v-model="colors[2]" />
+                    <color-card v-model="colors[3]" />
+                    <color-card v-model="colors[4]" />
+                    <color-card v-model="colors[5]" />
+                    <color-card v-model="colors[6]" />
+                    <color-card v-model="colors[7]" />
+                    <color-card v-model="colors[8]" />
                 </div>
             </div>
         </div>
@@ -119,10 +92,84 @@ green: {
 </template>
 
 <script>
+import chroma from 'chroma-js';
 import ColorCard from './components/color-card';
 
 export default {
     name: 'App',
+
+    data: () => ({
+        colors: [
+            {
+                name: 'green',
+                value: '#f0fff4',
+                shade: 100,
+            },
+            {
+                name: 'green',
+                value: '#c6f6d5',
+                shade: 200,
+            },
+            {
+                name: 'green',
+                value: '#9ae6b4',
+                shade: 300,
+            },
+            {
+                name: 'green',
+                value: '#68d391',
+                shade: 400,
+            },
+            {
+                name: 'green',
+                value: '#48bb78',
+                shade: 500,
+            },
+            {
+                name: 'green',
+                value: '#38a169',
+                shade: 600,
+            },
+            {
+                name: 'green',
+                value: '#2f855a',
+                shade: 700,
+            },
+            {
+                name: 'green',
+                value: '#276749',
+                shade: 800,
+            },
+            {
+                name: 'green',
+                value: '#22543d',
+                shade: 900,
+            },
+        ],
+    }),
+
+
+    methods: {
+        // WIP color scale generation
+        generateColorScale(base) {
+            const color = chroma(base);
+            const white = chroma('#ffffff');
+            const black = chroma('#000000');
+
+            return {
+                100: color.mix(white,0.9).base(),
+                200: color.mix(white,0.7).base(),
+                300: color.mix(white,0.5).base(),
+                400: color.mix(white,0.3).base(),
+                500: base,
+                600: color.mix(black,0.3).base(),
+                700: color.mix(black,0.5).base(),
+                800: color.mix(black,0.7).base(),
+                900: color.mix(black,0.8).base(),
+            };
+        },
+    },
+
 
     components: {
         ColorCard,
