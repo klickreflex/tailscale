@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" :style="{ '--base-color': baseColor }">
         <div class="max-w-xl mx-auto">
             <h1 class="font-serif text-6xl font-black text-blue-800">
                 TailScale
@@ -37,6 +37,17 @@
                         <span class="text-sm uppercase">Color Value</span>
                         <color-picker v-model="baseColor" />
                     </label>
+                </div>
+
+                <div class="mt-4">
+                    <span class="text-sm uppercase">Brightness Spread</span>
+                    <slider
+                        v-model="spread"
+                        :min="-100"
+                        :max="100"
+                        :min-range="100"
+                        :tooltip-formatter="value => `${value}%`"
+                    />
                 </div>
             </div>
         </div>
@@ -89,6 +100,7 @@
 import Color from 'color';
 import ColorCard from './components/color-card';
 import ColorPicker from './components/color-picker';
+import Slider from 'vue-slider-component';
 
 export default {
     name: 'App',
@@ -107,7 +119,7 @@ export default {
             800: '#276749',
             900: '#22543D',
         },
-
+        spread: [ -90, 80 ],
         presets: [
             { colorName: 'red', baseColor: '#F56565' },
             { colorName: 'orange', baseColor: '#ED8936' },
@@ -122,9 +134,8 @@ export default {
     }),
 
     watch: {
-        baseColor(base) {
-            this.shades = this.generateColorScale(base);
-        },
+        baseColor: 'regenerateShades',
+        spread: 'regenerateShades',
     },
 
     computed: {
@@ -142,22 +153,38 @@ export default {
     },
 
     methods: {
-        generateColorScale(base) {
-            const color = Color(base);
+        regenerateShades() {
+            const color = Color(this.baseColor);
             const white = Color('#ffffff');
             const black = Color('#000000');
 
-            return {
-                100: color.mix(white,0.9).hex(),
-                200: color.mix(white,0.7).hex(),
-                300: color.mix(white,0.5).hex(),
-                400: color.mix(white,0.3).hex(),
-                500: base,
-                600: color.mix(black,0.3).hex(),
-                700: color.mix(black,0.5).hex(),
-                800: color.mix(black,0.7).hex(),
-                900: color.mix(black,0.8).hex(),
+            const blackMultiplier = (this.spread[0] / 100) / 4;
+            const whiteMultiplier = (this.spread[1] / 100) / 4;
+            const multipliers = {
+                100: whiteMultiplier * 4,
+                200: whiteMultiplier * 3,
+                300: whiteMultiplier * 2,
+                400: whiteMultiplier * 1,
+                500: null,
+                600: blackMultiplier * 1,
+                700: blackMultiplier * 2,
+                800: blackMultiplier * 3,
+                900: blackMultiplier * 4,
             };
+
+            const shades = { };
+            for (const shade of Object.keys(multipliers)) {
+                const multiplier = multipliers[shade];
+                if (multiplier === null) {
+                    shades[shade] = this.baseColor;
+                } else if (multiplier > 0) {
+                    shades[shade] = color.mix(white, multiplier).hex();
+                } else {
+                    shades[shade] = color.mix(black, Math.abs(multiplier)).hex();
+                }
+            }
+
+            this.shades = shades;
         },
         applyPreset(preset) {
             if (preset.baseColor) {
@@ -173,6 +200,14 @@ export default {
     components: {
         ColorCard,
         ColorPicker,
+        Slider,
     },
 };
 </script>
+
+<style lang="scss">
+
+/* Slider styles */
+$themeColor: var(--base-color);
+@import '~vue-slider-component/lib/theme/default.scss';
+</style>
