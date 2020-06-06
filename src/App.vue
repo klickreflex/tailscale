@@ -9,7 +9,19 @@
             </p>
         </div>
 
-        <div class="max-w-xl mx-auto mt-8">
+        <div class="mt-8 max-w-xl mx-auto flex justify-between">
+            <button
+                class="w-8 h-8 mx-2 rounded border-yellow-300"
+                :class="{
+                    'border-2': baseColor === preset.baseColor,
+                }"
+                v-for="preset in presets"
+                :style="{ backgroundColor: preset.baseColor }"
+                @click="applyPreset(preset)"
+            />
+        </div>
+
+        <div class="max-w-xl mx-auto mt-4">
             <div class="p-4 -mx-4 border-4 border-yellow-300 rounded-lg">
                 <div class="grid grid-cols-2 gap-4">
                     <label class="block">
@@ -17,7 +29,7 @@
                         <input
                             class="block w-full mt-1 form-input"
                             placeholder="green"
-                            v-model="baseColor"
+                            v-model="colorName"
                         >
                     </label>
 
@@ -78,18 +90,7 @@
 
 
             <div class="max-w-xl mx-auto mt-6">
-                <pre class="px-16 py-6 text-yellow-200 bg-blue-900 rounded-lg">
-green: {
-    100: '#f0fff4',
-    200: '#c6f6d5',
-    300: '#9ae6b4',
-    400: '#68d391',
-    500: '#48bb78',
-    600: '#38a169',
-    700: '#2f855a',
-    800: '#276749',
-    900: '#22543d',
-},</pre>
+                <pre class="px-16 py-6 text-yellow-200 bg-blue-900 rounded-lg">{{ tailwindConfig }}</pre>
             </div>
         </div>
     </div>
@@ -106,19 +107,30 @@ export default {
 
     data: () => ({
         colorName: 'green',
-        baseColor: '#48bb78',
+        baseColor: '#48BB78',
         shades: {
-            100: '#f0fff4',
-            200: '#c6f6d5',
-            300: '#9ae6b4',
-            400: '#68d391',
-            500: '#48bb78',
-            600: '#38a169',
-            700: '#2f855a',
+            100: '#F0FFF4',
+            200: '#C6F6D5',
+            300: '#9AE6B4',
+            400: '#68D391',
+            500: '#48BB78',
+            600: '#38A169',
+            700: '#2F855A',
             800: '#276749',
-            900: '#22543d',
+            900: '#22543D',
         },
         spread: [ -90, 80 ],
+        presets: [
+            { colorName: 'red', baseColor: '#F56565' },
+            { colorName: 'orange', baseColor: '#ED8936' },
+            { colorName: 'yellow', baseColor: '#ECC94B' },
+            { colorName: 'green', baseColor: '#48BB78' },
+            { colorName: 'teal', baseColor: '#38B2AC' },
+            { colorName: 'blue', baseColor: '#4299E1' },
+            { colorName: 'indigo', baseColor: '#667EEA' },
+            { colorName: 'purple', baseColor: '#9F7AEA' },
+            { colorName: 'pink', baseColor: '#ED64A6' },
+        ],
     }),
 
     watch: {
@@ -126,6 +138,19 @@ export default {
         spread: 'regenerateShades',
     },
 
+    computed: {
+        tailwindConfig() {
+            const config = [];
+            config.push(`${this.colorName}: {`);
+
+            for (const shade of Object.keys(this.shades)) {
+                config.push(`    ${shade}: '${this.shades[shade]}',`);
+            }
+
+            config.push('}');
+            return config.join('\n');
+        },
+    },
 
     methods: {
         regenerateShades() {
@@ -160,6 +185,14 @@ export default {
             }
 
             this.shades = shades;
+        },
+        applyPreset(preset) {
+            if (preset.baseColor) {
+                this.baseColor = preset.baseColor;
+            }
+            if (preset.colorName) {
+                this.colorName = preset.colorName;
+            }
         },
     },
 
