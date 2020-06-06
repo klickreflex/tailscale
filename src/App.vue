@@ -23,12 +23,7 @@
 
                     <label class="block">
                         <span class="text-sm uppercase">Color Value</span>
-                        <input
-                            class="block w-full mt-1 form-input"
-                            type="text"
-                            placeholder="#48bb78"
-                            v-model="colors[4].value"
-                        >
+                        <color-picker v-model="colors[4].value" />
                     </label>
                 </div>
             </div>
@@ -43,15 +38,11 @@
             </p>
             <div class="max-w-3xl mx-auto mt-6">
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <color-card v-model="colors[0]" />
-                    <color-card v-model="colors[1]" />
-                    <color-card v-model="colors[2]" />
-                    <color-card v-model="colors[3]" />
-                    <color-card v-model="colors[4]" />
-                    <color-card v-model="colors[5]" />
-                    <color-card v-model="colors[6]" />
-                    <color-card v-model="colors[7]" />
-                    <color-card v-model="colors[8]" />
+                    <color-card
+                        v-for="(color, index) in colors"
+                        v-model="colors[index]"
+                        :key="index"
+                    />
                 </div>
             </div>
         </div>
@@ -94,6 +85,7 @@ green: {
 <script>
 import chroma from 'chroma-js';
 import ColorCard from './components/color-card';
+import ColorPicker from './components/color-picker';
 
 export default {
     name: 'App',
@@ -173,6 +165,7 @@ export default {
 
     components: {
         ColorCard,
+        ColorPicker,
     },
 };
 </script>
