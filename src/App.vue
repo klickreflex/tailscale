@@ -67,18 +67,7 @@
 
 
             <div class="max-w-xl mx-auto mt-6">
-                <pre class="px-16 py-6 text-yellow-200 bg-blue-900 rounded-lg">
-green: {
-    100: '#f0fff4',
-    200: '#c6f6d5',
-    300: '#9ae6b4',
-    400: '#68d391',
-    500: '#48bb78',
-    600: '#38a169',
-    700: '#2f855a',
-    800: '#276749',
-    900: '#22543d',
-},</pre>
+                <pre class="px-16 py-6 text-yellow-200 bg-blue-900 rounded-lg">{{ tailwindConfig }}</pre>
             </div>
         </div>
     </div>
@@ -114,6 +103,19 @@ export default {
         },
     },
 
+    computed: {
+        tailwindConfig() {
+            const config = [];
+            config.push(`${this.colorName}: {`);
+
+            for (const shade of Object.keys(this.shades)) {
+                config.push(`    ${shade}: '${this.shades[shade]}',`);
+            }
+
+            config.push('}');
+            return config.join('\n');
+        },
+    },
 
     methods: {
         generateColorScale(base) {
