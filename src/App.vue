@@ -17,13 +17,13 @@
                         <input
                             class="block w-full mt-1 form-input"
                             placeholder="green"
-                            v-model="colors[4].name"
+                            v-model="baseColor"
                         >
                     </label>
 
                     <label class="block">
                         <span class="text-sm uppercase">Color Value</span>
-                        <color-picker v-model="colors[4].value" />
+                        <color-picker v-model="baseColor" />
                     </label>
                 </div>
             </div>
@@ -39,9 +39,11 @@
             <div class="max-w-3xl mx-auto mt-6">
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                     <color-card
-                        v-for="(color, index) in colors"
-                        v-model="colors[index]"
-                        :key="index"
+                        v-for="(color, shade) in shades"
+                        v-model="shades[shade]"
+                        :color-name="colorName"
+                        :shade-name="shade"
+                        :key="shade"
                     />
                 </div>
             </div>
@@ -83,7 +85,7 @@ green: {
 </template>
 
 <script>
-import chroma from 'chroma-js';
+import Color from 'color';
 import ColorCard from './components/color-card';
 import ColorPicker from './components/color-picker';
 
@@ -91,73 +93,44 @@ export default {
     name: 'App',
 
     data: () => ({
-        colors: [
-            {
-                name: 'green',
-                value: '#f0fff4',
-                shade: 100,
-            },
-            {
-                name: 'green',
-                value: '#c6f6d5',
-                shade: 200,
-            },
-            {
-                name: 'green',
-                value: '#9ae6b4',
-                shade: 300,
-            },
-            {
-                name: 'green',
-                value: '#68d391',
-                shade: 400,
-            },
-            {
-                name: 'green',
-                value: '#48bb78',
-                shade: 500,
-            },
-            {
-                name: 'green',
-                value: '#38a169',
-                shade: 600,
-            },
-            {
-                name: 'green',
-                value: '#2f855a',
-                shade: 700,
-            },
-            {
-                name: 'green',
-                value: '#276749',
-                shade: 800,
-            },
-            {
-                name: 'green',
-                value: '#22543d',
-                shade: 900,
-            },
-        ],
+        colorName: 'green',
+        baseColor: '#48bb78',
+        shades: {
+            100: '#f0fff4',
+            200: '#c6f6d5',
+            300: '#9ae6b4',
+            400: '#68d391',
+            500: '#48bb78',
+            600: '#38a169',
+            700: '#2f855a',
+            800: '#276749',
+            900: '#22543d',
+        },
     }),
+
+    watch: {
+        baseColor(base) {
+            this.shades = this.generateColorScale(base);
+        },
+    },
 
 
     methods: {
-        // WIP color scale generation
         generateColorScale(base) {
-            const color = chroma(base);
-            const white = chroma('#ffffff');
-            const black = chroma('#000000');
+            const color = Color(base);
+            const white = Color('#ffffff');
+            const black = Color('#000000');
 
             return {
-                100: color.mix(white,0.9).base(),
-                200: color.mix(white,0.7).base(),
-                300: color.mix(white,0.5).base(),
-                400: color.mix(white,0.3).base(),
+                100: color.mix(white,0.9).hex(),
+                200: color.mix(white,0.7).hex(),
+                300: color.mix(white,0.5).hex(),
+                400: color.mix(white,0.3).hex(),
                 500: base,
-                600: color.mix(black,0.3).base(),
-                700: color.mix(black,0.5).base(),
-                800: color.mix(black,0.7).base(),
-                900: color.mix(black,0.8).base(),
+                600: color.mix(black,0.3).hex(),
+                700: color.mix(black,0.5).hex(),
+                800: color.mix(black,0.7).hex(),
+                900: color.mix(black,0.8).hex(),
             };
         },
     },
