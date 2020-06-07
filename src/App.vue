@@ -9,17 +9,12 @@
             </p>
         </div>
 
-        <div class="mt-8 max-w-xl mx-auto flex justify-between">
-            <button
-                class="w-8 h-8 mx-2 rounded border-yellow-300"
-                :class="{
-                    'border-2': baseColor === preset.baseColor,
-                }"
-                v-for="preset in presets"
-                :style="{ backgroundColor: preset.baseColor }"
-                @click="applyPreset(preset)"
-            />
-        </div>
+        <preset-list
+            :presets="presets"
+            :base-color="baseColor"
+            @apply="applyPreset"
+            class="mt-8 max-w-xl mx-auto "
+        />
 
         <div class="max-w-xl mx-auto mt-4">
             <div class="p-4 -mx-4 border-4 border-current-300 rounded-lg">
@@ -104,12 +99,13 @@
 </template>
 
 <script>
-import Color from 'color';
 import ColorCard from './components/color-card';
 import ColorPicker from './components/color-picker';
 import CopyToClipboardButton from './components/copy-to-clipboard-button';
 import ColorNameSuggestion from './components/color-name-suggestion';
 import Slider from 'vue-slider-component';
+import PresetList from './components/preset-list';
+import { generateColorShades, generateTailwindConfig } from './generation';
 
 export default {
     name: 'App',
@@ -156,52 +152,14 @@ export default {
             return properties;
         },
         tailwindConfig() {
-            const config = [];
-            config.push(`${this.colorName}: {`);
-
-            for (const shade of Object.keys(this.shades)) {
-                config.push(`    ${shade}: '${this.shades[shade]}',`);
-            }
-
-            config.push('}');
-            return config.join('\n');
+            return generateTailwindConfig(this.colorName, this.shades);
         },
     },
 
 
     methods: {
         regenerateShades() {
-            const color = Color(this.baseColor);
-            const white = Color('#ffffff');
-            const black = Color('#000000');
-
-            const blackMultiplier = (this.spread[0] / 100) / 4;
-            const whiteMultiplier = (this.spread[1] / 100) / 4;
-            const multipliers = {
-                100: whiteMultiplier * 4,
-                200: whiteMultiplier * 3,
-                300: whiteMultiplier * 2,
-                400: whiteMultiplier * 1,
-                500: null,
-                600: blackMultiplier * 1,
-                700: blackMultiplier * 2,
-                800: blackMultiplier * 3,
-                900: blackMultiplier * 4,
-            };
-
-            const shades = { };
-            for (const shade of Object.keys(multipliers)) {
-                const multiplier = multipliers[shade];
-                if (multiplier === null) {
-                    shades[shade] = this.baseColor;
-                } else if (multiplier > 0) {
-                    shades[shade] = color.mix(white, multiplier).hex();
-                } else {
-                    shades[shade] = color.mix(black, Math.abs(multiplier)).hex();
-                }
-            }
-
-            this.shades = shades;
+            this.shades = generateColorShades(this.baseColor, this.spread);
         },
         applyPreset(preset) {
             if (preset.baseColor) {
@@ -219,7 +177,7 @@ export default {
         ColorPicker,
         Slider,
         CopyToClipboardButton,
-        ColorNameSuggestion,
+        PresetList,
     },
 };
 </script>
