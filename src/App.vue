@@ -34,16 +34,12 @@
                             >
                         </label>
 
-                        <div class="mt-4" v-if="suggestedColorName !== colorName">
-                            Suggestion:
-                            <button
-                                class="p-2 bg-current-500 rounded"
-                                :class="{ 'text-white': isDark }"
-                                @click="colorName = suggestedColorName"
-                            >
-                                {{ suggestedColorName }}
-                            </button>
-                        </div>
+                        <color-name-suggestion
+                            v-model="colorName"
+                            :base-color="baseColor"
+                            :presets="presets"
+                            class="mt-4"
+                        />
                     </div>
 
 
@@ -112,6 +108,7 @@ import Color from 'color';
 import ColorCard from './components/color-card';
 import ColorPicker from './components/color-picker';
 import CopyToClipboardButton from './components/copy-to-clipboard-button';
+import ColorNameSuggestion from './components/color-name-suggestion';
 import Slider from 'vue-slider-component';
 
 export default {
@@ -169,23 +166,6 @@ export default {
             config.push('}');
             return config.join('\n');
         },
-        suggestedColorName() {
-            const colorHsl = Color(this.baseColor).hsl().object();
-
-            const diffToColor = subject => {
-                const subHsl = Color(subject).hsl().object();
-                return Math.abs(colorHsl.h - subHsl.h);
-            };
-
-            const presets = [...this.presets];
-
-            return presets.sort((a, b) => {
-                return diffToColor(a.baseColor) - diffToColor(b.baseColor);
-            })[0].colorName;
-        },
-        isDark() {
-            return Color(this.baseColor).isDark();
-        },
     },
 
 
@@ -239,6 +219,7 @@ export default {
         ColorPicker,
         Slider,
         CopyToClipboardButton,
+        ColorNameSuggestion,
     },
 };
 </script>
