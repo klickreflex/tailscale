@@ -24,14 +24,24 @@
         <div class="max-w-xl mx-auto mt-4">
             <div class="p-4 -mx-4 border-4 border-current-300 rounded-lg">
                 <div class="grid grid-cols-2 gap-4">
-                    <label class="block">
-                        <span class="text-sm uppercase">Color Name</span>
-                        <input
-                            class="block w-full mt-1 form-input"
-                            placeholder="green"
+                    <div>
+                        <label class="block">
+                            <span class="text-sm uppercase">Color Name</span>
+                            <input
+                                class="block w-full mt-1 form-input"
+                                placeholder="green"
+                                v-model="colorName"
+                            >
+                        </label>
+
+                        <color-name-suggestion
                             v-model="colorName"
-                        >
-                    </label>
+                            :base-color="baseColor"
+                            :presets="presets"
+                            class="mt-4"
+                        />
+                    </div>
+
 
                     <label class="block">
                         <span class="text-sm uppercase">Color Value</span>
@@ -98,6 +108,7 @@ import Color from 'color';
 import ColorCard from './components/color-card';
 import ColorPicker from './components/color-picker';
 import CopyToClipboardButton from './components/copy-to-clipboard-button';
+import ColorNameSuggestion from './components/color-name-suggestion';
 import Slider from 'vue-slider-component';
 
 export default {
@@ -208,6 +219,7 @@ export default {
         ColorPicker,
         Slider,
         CopyToClipboardButton,
+        ColorNameSuggestion,
     },
 };
 </script>
