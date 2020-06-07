@@ -24,14 +24,28 @@
         <div class="max-w-xl mx-auto mt-4">
             <div class="p-4 -mx-4 border-4 border-current-300 rounded-lg">
                 <div class="grid grid-cols-2 gap-4">
-                    <label class="block">
-                        <span class="text-sm uppercase">Color Name</span>
-                        <input
-                            class="block w-full mt-1 form-input"
-                            placeholder="green"
-                            v-model="colorName"
-                        >
-                    </label>
+                    <div>
+                        <label class="block">
+                            <span class="text-sm uppercase">Color Name</span>
+                            <input
+                                class="block w-full mt-1 form-input"
+                                placeholder="green"
+                                v-model="colorName"
+                            >
+                        </label>
+
+                        <div class="mt-4" v-if="suggestedColorName !== colorName">
+                            Suggestion:
+                            <button
+                                class="p-2 bg-current-500 rounded"
+                                :class="{ 'text-white': isDark }"
+                                @click="colorName = suggestedColorName"
+                            >
+                                {{ suggestedColorName }}
+                            </button>
+                        </div>
+                    </div>
+
 
                     <label class="block">
                         <span class="text-sm uppercase">Color Value</span>
@@ -154,6 +168,23 @@ export default {
 
             config.push('}');
             return config.join('\n');
+        },
+        suggestedColorName() {
+            const colorHsl = Color(this.baseColor).hsl().object();
+
+            const diffToColor = subject => {
+                const subHsl = Color(subject).hsl().object();
+                return Math.abs(colorHsl.h - subHsl.h);
+            };
+
+            const presets = [...this.presets];
+
+            return presets.sort((a, b) => {
+                return diffToColor(a.baseColor) - diffToColor(b.baseColor);
+            })[0].colorName;
+        },
+        isDark() {
+            return Color(this.baseColor).isDark();
         },
     },
 
