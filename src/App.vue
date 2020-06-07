@@ -13,11 +13,11 @@
             :presets="presets"
             :base-color="baseColor"
             @apply="applyPreset"
-            class="mt-8 max-w-xl mx-auto "
+            class="max-w-xl mx-auto mt-8 "
         />
 
         <div class="max-w-xl mx-auto mt-4">
-            <div class="p-4 -mx-4 border-4 border-current-300 rounded-lg">
+            <div class="p-4 -mx-4 border-4 rounded-lg border-current-300">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block">
@@ -178,6 +178,7 @@ export default {
         Slider,
         CopyToClipboardButton,
         PresetList,
+        ColorNameSuggestion,
     },
 };
 </script>

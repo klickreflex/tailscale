@@ -2,7 +2,7 @@
     <div v-if="suggestedColorName !== value">
         Suggestion:
         <button
-            class="p-2 bg-current-500 rounded"
+            class="p-2 rounded bg-current-500"
             :class="{ 'text-white': isDark }"
             @click="$emit('input', suggestedColorName)"
         >
