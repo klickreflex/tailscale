@@ -1,5 +1,5 @@
 <template>
-    <div id="app" :style="{ '--base-color': baseColor }">
+    <div id="app" :style="customProperties">
         <div class="max-w-xl mx-auto">
             <h1 class="font-serif text-6xl font-black text-blue-800">
                 TailScale
@@ -22,7 +22,7 @@
         </div>
 
         <div class="max-w-xl mx-auto mt-4">
-            <div class="p-4 -mx-4 border-4 border-yellow-300 rounded-lg">
+            <div class="p-4 -mx-4 border-4 border-current-300 rounded-lg">
                 <div class="grid grid-cols-2 gap-4">
                     <label class="block">
                         <span class="text-sm uppercase">Color Name</span>
@@ -137,6 +137,13 @@ export default {
     },
 
     computed: {
+        customProperties() {
+            const properties = {};
+            for (const shade of Object.keys(this.shades)) {
+                properties[`--current-${shade}`] = this.shades[shade];
+            }
+            return properties;
+        },
         tailwindConfig() {
             const config = [];
             config.push(`${this.colorName}: {`);
@@ -149,6 +156,7 @@ export default {
             return config.join('\n');
         },
     },
+
 
     methods: {
         regenerateShades() {
@@ -207,6 +215,6 @@ export default {
 <style lang="scss">
 
 /* Slider styles */
-$themeColor: var(--base-color);
+$themeColor: var(--current-500);
 @import '~vue-slider-component/lib/theme/default.scss';
 </style>
